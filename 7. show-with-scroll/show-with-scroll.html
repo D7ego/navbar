@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar - show-with-scroll</title>
+    <meta name="author" content="Diego Puentes">
+    
+    <style>		
+		
+		/* TO FIX THE HEADER AND HIDE IT ON SCROLL */
+		header.fixed {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			
+			/* Ensure to always stay in the foreground of other elements of the main */
+			z-index: 999;	/* Increase if necessary */
+			
+			transition: all 0.3s ease-out;
+		}
+		
+		#header-space{
+			height: 3em;			/* /!\ Must be the same size than the li height /!\ - Use scss variables */
+		}
+		
+		header.header-up {
+			top: -3em;				/* /!\ Must be the same size than the li height /!\ - Use scss variables */
+			box-shadow: none;
+		}
+		
+		
+		/* TO DENOTE THE ACTIVE ITEM */
+		header nav ul li.active {
+			/* To set the :before property to absolute */
+			position: relative;
+		}
+		
+		header nav ul li.active:before{
+			content: "";
+			
+			/* Set the full size position */
+			position: absolute;
+			bottom: 0;			
+			left: 0;
+			right: 0;
+			
+			background-color: white;			/* Set border color - should be same as a font color - Use scss */			
+			height: 0.15em;				/* Set size of the border - should be proportional to navbar size below - Use scss */
+		}
+		
+		
+		/* TO CENTER LINKS */
+		header nav {
+			text-align: center;
+		}
+		
+		header nav ul{
+			display: inline;
+		}
+		
+		
+		/* TO MAKE IT HORIZONTAL */
+		header nav ul li {		
+			display : table-cell;	/* Allow to vertically align text if cell if bigger than its content */
+			
+			/* Align text vertically */
+			vertical-align: middle;
+		}	
+		
+		
+		/* TO MAKE IT BEAUTIFUL */
+		body{
+			font-family: "Trebuchet MS", Helvetica, sans-serif;
+			background-color: #eee;
+			
+			/* Remove browser default settings */
+			margin: 0;
+			padding: 0;
+		}		
+		
+		header{						
+			background-color: #3f51b5;
+			box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
+			
+			/* Hide a:hover effect */
+			overflow: hidden;
+		}
+		
+		header nav ul{
+			list-style-type: none;			
+			
+			/* Remove browser default settings */
+			margin: 0;
+			padding: 0;			
+		}
+		
+		header nav ul li {	
+			height: 3em;			/* Set size of navbar links */
+		}
+		
+		header nav ul li a {			
+			text-decoration: none;
+			text-transform: uppercase;
+			color: #fff;
+			
+			padding : 1em;			/* Set spacing between links */
+		}
+		
+		header nav ul li a:hover{
+			background-color: #303f9f;
+		}
+		
+		
+		/* TO HAVE CONTENT TO SCROLL */		
+		main {
+			height: 30em;			
+		}
+		
+		main div {
+			width: 90%;
+			height: 10em;
+			margin: 3em auto;
+			background-color: #fff;
+			box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+		}
+		
+		
+	</style>
+	
+	<!-- Import jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	
+	<script>
+		// Adapted from http://jsfiddle.net/mariusc23/s6mLJ/31/		
+		$(document).ready(function() {	
+			
+			// Hide header on scroll down, show on scroll up
+			var didScroll;
+			var lastScrollTop = 0;
+			var headerHeight = $('header').outerHeight();	// Include padding, border and margin
+			
+			$(window).scroll(function(event){
+				didScroll = true;
+			});
+			
+			// Set interval do something when user scroll 
+			setInterval(function() {
+				if (didScroll) {
+					hasScrolled();
+					didScroll = false;
+				}
+			}, 250);
+
+			function hasScrolled() {
+
+				var st = $(this).scrollTop();	// Get the vertical position of the scroll bar
+				
+				// Alway show the header if scroll to the top
+				if(st <= headerHeight){				
+					$('header').removeClass('header-up');
+					return;
+				}
+				
+				// Hide header if scrolling down and scroll more than header hight
+				if(st >= lastScrollTop && st > headerHeight){
+					$('header').addClass('header-up');
+				}
+				
+				// Show header if scrolling up and scroll more than header hight - allow scrolling up slowly
+				if(st < lastScrollTop && lastScrollTop - st > headerHeight){
+					$('header').removeClass('header-up');					
+				}
+				
+				lastScrollTop = st;
+			}
+		});
+		
+	</script>
+	
+</head>
+
+<body>
+	<header class="fixed">
+		<nav>
+			<ul>
+				<li class="active"><a href="#">Tab 1</a></li>
+				<li><a href="#">Tab 2</a></li>
+				<li><a href="#">Tab 3</a></li>
+			</ul>
+		</nav>
+	</header>
+	<div id="header-space"></div>
+	<main>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</main>
+</body>
+</html>
